@@ -4,16 +4,18 @@ import { GitCompare, Leaf } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { TiffinCard, SectionHead } from "@/components/Cards";
-import { TIFFIN, IMG } from "@/data/mockData";
+import { IMG } from "@/data/mockData";
+import { useCatalog } from "@/context/CatalogContext";
 
 const MEAL_FILTERS = ["All", "Breakfast", "Lunch", "Dinner", "Full-day"];
 
 export default function Tiffin() {
   const nav = useNavigate();
+  const { tiffin } = useCatalog();
   const [filter, setFilter] = useState("All");
   const [vegOnly, setVegOnly] = useState(false);
 
-  const list = TIFFIN.filter((t) => {
+  const list = tiffin.filter((t) => {
     if (vegOnly && !t.veg) return false;
     if (filter === "All") return true;
     if (filter === "Full-day") return t.meals.split("+").length >= 3;

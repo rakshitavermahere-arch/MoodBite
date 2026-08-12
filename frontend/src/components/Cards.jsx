@@ -4,6 +4,7 @@ import { Star, Clock, MapPin, Leaf, Plus, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/context/AppContext";
 import { rupee } from "@/data/mockData";
+import { FallbackImage } from "@/components/FallbackImage";
 
 export const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -34,7 +35,7 @@ export function RestaurantCard({ r, i = 0, testIdScope = "catalog" }) {
       className="group rounded-3xl bg-card border border-border overflow-hidden hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 transition-transform transition-shadow duration-300">
       <Link to={`/restaurant/${r.id}`} data-testid={`${testIdScope}-restaurant-${r.id}-link`}>
         <div className="relative h-44 overflow-hidden">
-          <img src={r.img} alt={r.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <FallbackImage src={r.img} alt={r.name} testId={`${testIdScope}-restaurant-${r.id}-image`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           <div className="absolute top-3 left-3 flex gap-2">{r.eco && <EcoBadge />}</div>
           <button aria-label={`${isSaved ? "Unsave" : "Save"} ${r.name}`} data-testid={`${testIdScope}-restaurant-${r.id}-save-button`} onClick={(e) => { e.preventDefault(); toggleSave("restaurants", r.id); }}
             className="absolute top-3 right-3 w-9 h-9 grid place-items-center rounded-full bg-background/80 backdrop-blur hover:scale-110 transition-transform">
@@ -64,7 +65,7 @@ export function FoodCard({ f, i = 0, member, testIdScope = "catalog" }) {
     <motion.div variants={fadeUp} custom={i} initial="hidden" whileInView="show" viewport={{ once: true }}
       data-testid={`${testIdScope}-food-${f.id}-card`} className="group rounded-3xl bg-card border border-border overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-shadow duration-300">
       <div className="relative h-36 overflow-hidden">
-        <img src={f.img} alt={f.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        <FallbackImage src={f.img} alt={f.name} testId={`${testIdScope}-food-${f.id}-image`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         <div className="absolute top-2 left-2"><VegDot veg={f.veg} /></div>
       </div>
       <div className="p-4">
@@ -96,7 +97,7 @@ export function TiffinCard({ t, i = 0, testIdScope = "catalog" }) {
       className="group rounded-3xl bg-card border border-border overflow-hidden hover:shadow-xl hover:shadow-eco/10 hover:-translate-y-1 transition-transform transition-shadow duration-300">
       <Link to={`/tiffin/${t.id}`} data-testid={`${testIdScope}-tiffin-${t.id}-link`}>
         <div className="relative h-40 overflow-hidden">
-          <img src={t.img} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <FallbackImage src={t.img} alt={t.name} testId={`${testIdScope}-tiffin-${t.id}-image`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
           <span className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-eco text-eco-foreground text-xs font-bold">
             <Leaf className="w-3 h-3" /> Tiffin
           </span>

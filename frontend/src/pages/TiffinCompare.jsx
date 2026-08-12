@@ -4,7 +4,8 @@ import { ArrowLeft, Star, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { SectionHead, VegDot } from "@/components/Cards";
-import { TIFFIN, rupee } from "@/data/mockData";
+import { rupee } from "@/data/mockData";
+import { useCatalog } from "@/context/CatalogContext";
 
 const ROWS = [
   { key: "monthly", label: "Monthly Price", render: (t) => rupee(t.monthly) },
@@ -19,9 +20,10 @@ const ROWS = [
 
 export default function TiffinCompare() {
   const nav = useNavigate();
+  const { tiffin } = useCatalog();
   const [sel, setSel] = useState(["t1", "t2", "t3"]);
   const toggle = (id) => setSel((s) => (s.includes(id) ? s.filter((x) => x !== id) : s.length < 4 ? [...s, id] : s));
-  const chosen = TIFFIN.filter((t) => sel.includes(t.id));
+  const chosen = tiffin.filter((t) => sel.includes(t.id));
 
   return (
     <PageWrap>
@@ -29,7 +31,7 @@ export default function TiffinCompare() {
       <SectionHead title="Compare Tiffin Providers" subtitle="Pick up to 4 providers to compare side by side" />
 
       <div className="flex flex-wrap gap-2 mb-6">
-        {TIFFIN.map((t) => (
+        {tiffin.map((t) => (
           <button key={t.id} data-testid={`compare-toggle-${t.id}`} onClick={() => toggle(t.id)}
             className={`px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-colors ${sel.includes(t.id) ? "bg-eco text-eco-foreground border-eco" : "bg-card border-border text-muted-foreground hover:border-eco"}`}>{t.name}</button>
         ))}

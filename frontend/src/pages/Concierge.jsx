@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
 import { Sparkles, Send, Star, Clock, Plus, ArrowRight, Utensils, CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { VegDot } from "@/components/Cards";
 import { useApp } from "@/context/AppContext";
 import { rupee } from "@/data/mockData";
+import { api, apiError } from "@/lib/api";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 const SUGGESTIONS = [
   "I'm feeling sad and want comfort food under ₹250",
   "I'm studying and need something filling but not too heavy",
@@ -93,11 +92,11 @@ export default function Concierge() {
     setMessages((m) => [...m, { role: "user", text: msg }]);
     setLoading(true);
     try {
-      const { data } = await axios.post(`${API}/concierge`, { message: msg, session_id: sessionId });
+      const { data } = await api.post("/concierge", { message: msg, session_id: sessionId });
       setSessionId(data.session_id);
       setMessages((m) => [...m, { role: "ai", text: data.reply, recs: data.recommendations }]);
-    } catch (e) {
-      setMessages((m) => [...m, { role: "ai", error: true, text: "Sorry, I couldn't reach the kitchen brain just now. Try again in a moment!" }]);
+    } catch (error) {
+      setMessages((m) => [...m, { role: "ai", error: true, retry: msg, text: apiError(error, "The concierge is temporarily unavailable. Please retry.") }]);
     } finally {
       setLoading(false);
     }
@@ -134,6 +133,7 @@ export default function Concierge() {
                     <span className="w-8 h-8 rounded-xl bg-primary/10 text-primary grid place-items-center shrink-0"><Sparkles className="w-4 h-4" /></span>
                     <div data-testid={m.error ? "concierge-error-alert" : `concierge-ai-message-${idx}`} className="max-w-[85%] rounded-2xl rounded-bl-md bg-muted px-4 py-2.5 text-sm">{m.text}</div>
                   </div>
+                  {m.error && <Button size="sm" variant="outline" data-testid={`concierge-retry-${idx}-button`} onClick={() => send(m.retry)} className="rounded-full ml-10">Retry</Button>}
                   {m.recs?.length > 0 && (
                     <div className="grid sm:grid-cols-2 gap-3 pl-10">
                       {m.recs.map((r, i) => <RecCard key={r.id + i} rec={r} i={i} messageIndex={idx} />)}
@@ -161,7 +161,7 @@ export default function Concierge() {
         )}
 
         <div className="mt-4 flex items-center gap-2 bg-card border border-border rounded-full px-4 py-1 focus-within:ring-2 ring-primary/40">
-          <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
+          <input value={input} maxLength={1000} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
             data-testid="concierge-input" placeholder="Tell me how you feel or what you crave…"
             className="flex-1 bg-transparent outline-none py-3 text-sm" />
           <Button size="icon" data-testid="concierge-send" onClick={() => send()} disabled={loading} className="rounded-full w-10 h-10 shrink-0"><Send className="w-4 h-4" /></Button>

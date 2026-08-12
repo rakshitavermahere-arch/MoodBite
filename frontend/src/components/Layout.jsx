@@ -1,7 +1,9 @@
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Home, Compass, Sparkles, Users, UtensilsCrossed, Leaf, ClipboardList, User, ShoppingBag } from "lucide-react";
+import { Home, Compass, Sparkles, Users, UtensilsCrossed, Leaf, ClipboardList, User, ShoppingBag, LogOut } from "lucide-react";
 import { useApp } from "@/context/AppContext";
+import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
 
 const NAV = [
   { to: "/", label: "Home", icon: Home },
@@ -17,6 +19,9 @@ const MOBILE = [NAV[0], NAV[2], NAV[3], NAV[4], NAV[7]];
 
 export function Navbar() {
   const { cartCount } = useApp();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const signOut = async () => { await logout(); navigate("/login", { replace: true }); };
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
@@ -39,6 +44,12 @@ export function Navbar() {
               <span data-testid="nav-cart-count" className="absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 grid place-items-center rounded-full bg-primary text-primary-foreground text-xs font-bold">{cartCount}</span>
             )}
           </Link>
+          {user ? <>
+            <Link aria-label="Open profile" to="/profile" data-testid="nav-profile-button" className="w-10 h-10 grid place-items-center rounded-full bg-muted hover:bg-primary/10 font-bold transition-colors">
+              {user.picture ? <img src={user.picture} alt="" className="w-full h-full rounded-full object-cover" /> : user.name?.[0]?.toUpperCase()}
+            </Link>
+            <button aria-label="Sign out" data-testid="nav-logout-button" onClick={signOut} className="w-10 h-10 grid place-items-center rounded-full text-muted-foreground hover:text-destructive hover:bg-muted transition-colors"><LogOut className="w-4 h-4" /></button>
+          </> : <Button asChild size="sm" className="rounded-full px-5"><Link to="/login" data-testid="nav-login-link">Sign in</Link></Button>}
         </div>
       </div>
     </header>
@@ -83,7 +94,7 @@ export function Footer() {
           </div>
         ))}
       </div>
-      <div className="text-center text-xs text-muted-foreground pb-8">© 2026 MoodBite · Academic prototype · Demo Mode — no real payments processed</div>
+      <div className="text-center text-xs text-muted-foreground pb-8">© 2026 MoodBite · Online checkout is enabled only after verified provider configuration.</div>
     </footer>
   );
 }
@@ -95,4 +106,8 @@ export function PageWrap({ children }) {
       {children}
     </motion.main>
   );
+}
+
+export function Layout() {
+  return <><Navbar /><Outlet /><Footer /><BottomNav /></>;
 }

@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import * as Icons from "lucide-react";
-import { ArrowRight, Sparkles, Users, Leaf, Brain, CalendarCheck, Send } from "lucide-react";
+import { ArrowRight, Sparkles, Users, Leaf, Brain, CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { RestaurantCard, FoodCard, TiffinCard, SectionHead, fadeUp } from "@/components/Cards";
-import { MOODS, RESTAURANTS, FOODS, TIFFIN, IMG } from "@/data/mockData";
+import { IMG } from "@/data/mockData";
+import { useCatalog } from "@/context/CatalogContext";
+import { FallbackImage } from "@/components/FallbackImage";
 
 function MoodCard({ mood, i, onPick }) {
   const Icon = Icons[mood.icon] || Icons.Smile;
@@ -28,29 +30,31 @@ function MoodCard({ mood, i, onPick }) {
 
 export default function Home() {
   const nav = useNavigate();
+  const { moods, restaurants, foods, tiffin, error: catalogError } = useCatalog();
   const [q, setQ] = useState("");
   const ask = () => nav(`/concierge${q ? `?q=${encodeURIComponent(q)}` : ""}`);
   const pickMood = (m) => nav(`/concierge?q=${encodeURIComponent(m.query)}`);
-  const budgetFoods = FOODS.filter((f) => f.price <= 150).slice(0, 4);
+  const budgetFoods = foods.filter((f) => f.price <= 150).slice(0, 4);
 
   return (
     <PageWrap>
+      {catalogError && <div role="alert" data-testid="home-catalog-warning" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800 mb-5">{catalogError}</div>}
       {/* HERO */}
-      <section className="relative overflow-hidden rounded-[2rem] border border-border bg-card px-5 sm:px-10 py-12 sm:py-16 mb-14">
-        <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-primary/20 blur-3xl animate-blob" />
-        <div className="absolute -bottom-24 -left-10 w-72 h-72 rounded-full bg-eco/20 blur-3xl animate-blob" style={{ animationDelay: "3s" }} />
-        <div className="relative max-w-3xl">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold mb-5">
+      <section className="relative overflow-hidden rounded-3xl min-h-[470px] flex items-end px-5 sm:px-10 py-10 sm:py-14 mb-14">
+        <FallbackImage src={IMG.group} alt="Students deciding what to order together" testId="home-hero-image" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/10" />
+        <div className="relative max-w-3xl text-white">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-white text-xs font-bold mb-5">
             <Sparkles className="w-3.5 h-3.5" /> AI-powered · Student-first
           </span>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-black tracking-tighter leading-[1.05]">
             What does today <span className="text-primary">feel</span> like?
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground mt-4 max-w-xl">
+          <p className="text-base sm:text-lg text-white/85 mt-4 max-w-xl">
             Tell MoodBite what you're craving — or how you're feeling — and we'll help you find it.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 max-w-xl">
-            <div className="flex-1 flex items-center gap-2 bg-background border border-border rounded-full px-4 py-1 focus-within:ring-2 ring-primary/40">
+            <div className="flex-1 flex items-center gap-2 bg-white text-foreground border border-white/30 rounded-full px-4 py-1 focus-within:ring-2 ring-primary/60">
               <Sparkles className="w-4 h-4 text-primary shrink-0" />
               <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
                 data-testid="hero-ai-input" placeholder="I'm feeling stressed, something comfy under ₹250…"
@@ -60,7 +64,7 @@ export default function Home() {
               Ask MoodBite <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-3">Food for your mood. Meals for your life.</p>
+          <p className="text-xs text-white/70 mt-3">Food for your mood. Meals for your life.</p>
         </div>
       </section>
 
@@ -68,7 +72,7 @@ export default function Home() {
       <section className="mb-16">
         <SectionHead title="Pick a mood" subtitle="Tap how you feel and let the AI do the thinking." />
         <div className="grid grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4">
-          {MOODS.map((m, i) => <MoodCard key={m.id} mood={m} i={i} onPick={pickMood} />)}
+          {moods.map((m, i) => <MoodCard key={m.id} mood={m} i={i} onPick={pickMood} />)}
         </div>
       </section>
 
@@ -98,7 +102,7 @@ export default function Home() {
         <SectionHead title="Popular near you" subtitle="Loved by students around campus"
           action={<Button data-testid="home-popular-see-all-button" variant="ghost" className="rounded-full gap-1" onClick={() => nav("/explore")}>See all <ArrowRight className="w-4 h-4" /></Button>} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {RESTAURANTS.slice(0, 4).map((r, i) => <RestaurantCard key={r.id} r={r} i={i} testIdScope="home-popular" />)}
+          {restaurants.slice(0, 4).map((r, i) => <RestaurantCard key={r.id} r={r} i={i} testIdScope="home-popular" />)}
         </div>
       </section>
 
@@ -113,7 +117,7 @@ export default function Home() {
       {/* Group order CTA */}
       <section className="mb-16">
         <div className="relative overflow-hidden rounded-[2rem] border border-border">
-          <img src={IMG.group} alt="Group order" className="absolute inset-0 w-full h-full object-cover" />
+          <FallbackImage src={IMG.group} alt="Students sharing a group order" className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
           <div className="relative p-8 sm:p-12 max-w-lg text-white">
             <h2 className="text-3xl sm:text-4xl font-heading font-black tracking-tight">Ordering with friends?</h2>
@@ -130,7 +134,7 @@ export default function Home() {
         <SectionHead title="Daily Tiffin plans" subtitle="Home-style meals without the daily hassle"
           action={<Button data-testid="home-tiffin-explore-button" variant="ghost" className="rounded-full gap-1" onClick={() => nav("/tiffin")}>Explore <ArrowRight className="w-4 h-4" /></Button>} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {TIFFIN.slice(0, 3).map((t, i) => <TiffinCard key={t.id} t={t} i={i} testIdScope="home" />)}
+          {tiffin.slice(0, 3).map((t, i) => <TiffinCard key={t.id} t={t} i={i} testIdScope="home" />)}
         </div>
       </section>
 
@@ -138,7 +142,7 @@ export default function Home() {
       <section className="mb-16">
         <SectionHead title="Eco-friendly choices" subtitle="Providers offering reduced-packaging Eco Mode" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {RESTAURANTS.filter((r) => r.eco).slice(0, 4).map((r, i) => <RestaurantCard key={r.id} r={r} i={i} testIdScope="home-eco" />)}
+          {restaurants.filter((r) => r.eco).slice(0, 4).map((r, i) => <RestaurantCard key={r.id} r={r} i={i} testIdScope="home-eco" />)}
         </div>
       </section>
     </PageWrap>

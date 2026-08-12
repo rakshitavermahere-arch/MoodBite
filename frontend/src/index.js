@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/index.css";
 import App from "@/App";
-import { AppProvider } from "@/context/AppContext";
 import { Toaster } from "@/components/ui/sonner";
 
 const queryClient = new QueryClient({
@@ -14,10 +13,8 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AppProvider>
-        <App />
-        <Toaster position="top-center" richColors />
-      </AppProvider>
+      <App />
+      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   </React.StrictMode>,
 );

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { RestaurantCard, FoodCard, SectionHead } from "@/components/Cards";
-import { RESTAURANTS, FOODS } from "@/data/mockData";
+import { useCatalog } from "@/context/CatalogContext";
 
 const CUISINES = ["All", "North Indian", "Chinese", "South Indian", "Pizza", "Cafe", "Biryani", "Home-style"];
 const FILTERS = [
@@ -18,6 +18,7 @@ const FILTERS = [
 ];
 
 export default function Explore() {
+  const { restaurants: catalogRestaurants, foods: catalogFoods } = useCatalog();
   const [q, setQ] = useState("");
   const [cuisine, setCuisine] = useState("All");
   const [active, setActive] = useState([]);
@@ -26,13 +27,13 @@ export default function Explore() {
   const suggestions = useMemo(() => {
     if (!q.trim()) return [];
     const s = q.toLowerCase();
-    const f = FOODS.filter((x) => x.name.toLowerCase().includes(s)).slice(0, 5).map((x) => ({ type: "food", label: x.name, sub: x.restaurant, to: `/restaurant/${x.restaurantId}` }));
-    const r = RESTAURANTS.filter((x) => x.name.toLowerCase().includes(s) || x.cuisine.toLowerCase().includes(s)).slice(0, 3).map((x) => ({ type: "restaurant", label: x.name, sub: x.cuisine, to: `/restaurant/${x.id}` }));
+    const f = catalogFoods.filter((x) => x.name.toLowerCase().includes(s)).slice(0, 5).map((x) => ({ type: "food", label: x.name, sub: x.restaurant, to: `/restaurant/${x.restaurantId}` }));
+    const r = catalogRestaurants.filter((x) => x.name.toLowerCase().includes(s) || x.cuisine.toLowerCase().includes(s)).slice(0, 3).map((x) => ({ type: "restaurant", label: x.name, sub: x.cuisine, to: `/restaurant/${x.id}` }));
     return [...f, ...r].slice(0, 7);
-  }, [q]);
+  }, [q, catalogFoods, catalogRestaurants]);
 
   const restaurants = useMemo(() => {
-    return RESTAURANTS.filter((r) => {
+    return catalogRestaurants.filter((r) => {
       if (cuisine !== "All" && !r.cuisine.toLowerCase().includes(cuisine.toLowerCase()) && !(cuisine === "Cafe" && r.cuisine.includes("Cafe")) && !(cuisine === "Home-style" && r.cuisine.includes("Home"))) return false;
       if (active.includes("eco") && !r.eco) return false;
       if (active.includes("popular") && !r.tags.includes("Popular")) return false;
@@ -40,10 +41,10 @@ export default function Explore() {
       if (q.trim() && !r.name.toLowerCase().includes(q.toLowerCase()) && !r.cuisine.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [cuisine, active, q]);
+  }, [catalogRestaurants, cuisine, active, q]);
 
   const foods = useMemo(() => {
-    return FOODS.filter((f) => {
+    return catalogFoods.filter((f) => {
       if (active.includes("veg") && !f.veg) return false;
       if (active.includes("u150") && f.price > 150) return false;
       if (active.includes("u250") && f.price > 250) return false;
@@ -51,7 +52,7 @@ export default function Explore() {
       if (q.trim() && !f.name.toLowerCase().includes(q.toLowerCase())) return false;
       return true;
     });
-  }, [active, q]);
+  }, [catalogFoods, active, q]);
 
   const foodFiltersOn = active.some((a) => ["veg", "u150", "u250"].includes(a)) || q.trim();
 

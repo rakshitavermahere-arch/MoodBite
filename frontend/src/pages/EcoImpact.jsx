@@ -1,96 +1,41 @@
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
-import * as Icons from "lucide-react";
-import { toast } from "sonner";
-import { Leaf, Package, Award, TrendingUp, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Progress } from "@/components/ui/progress";
+import { animate, motion } from "framer-motion";
+import { Award, CheckCircle2, Leaf, Package, ShoppingBag, TrendingUp } from "lucide-react";
 import { PageWrap } from "@/components/Layout";
 import { SectionHead } from "@/components/Cards";
+import { Switch } from "@/components/ui/switch";
 import { useApp } from "@/context/AppContext";
-import { CAUSES } from "@/data/mockData";
+
 
 function Counter({ to, suffix = "" }) {
-  const [val, setVal] = useState(0);
+  const [value, setValue] = useState(0);
   useEffect(() => {
-    const mv = { v: 0 };
-    const controls = animate(0, to, { duration: 1.2, onUpdate: (v) => setVal(Math.round(v)) });
+    const controls = animate(0, to, { duration: 1, onUpdate: (next) => setValue(Math.round(next)) });
     return () => controls.stop();
   }, [to]);
-  return <span>{val}{suffix}</span>;
+  return <span>{value}{suffix}</span>;
 }
 
 export default function EcoImpact() {
-  const { ecoStats } = useApp();
-  const [contributed, setContributed] = useState(null);
-
+  const { eco, setEco, ecoStats } = useApp();
   const stats = [
     { label: "Packaging avoided", value: ecoStats.packaging, suffix: " units", icon: Package, color: "text-eco" },
     { label: "Eco Score", value: ecoStats.score, suffix: "", icon: Award, color: "text-primary" },
-    { label: "Eco Mode orders", value: ecoStats.ecoOrders, suffix: "", icon: TrendingUp, color: "text-sky-500" },
+    { label: "Verified Eco orders", value: ecoStats.ecoOrders, suffix: "", icon: TrendingUp, color: "text-sky-600" },
   ];
 
   return (
     <PageWrap>
-      <div className="relative overflow-hidden rounded-[2rem] border border-eco/30 bg-eco/5 p-8 sm:p-12 mb-10">
-        <div className="absolute -top-16 -right-10 w-64 h-64 rounded-full bg-eco/20 blur-3xl animate-blob" />
-        <div className="relative">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-eco/15 text-eco text-xs font-bold mb-4"><Leaf className="w-3.5 h-3.5" /> Eco Impact Wallet</span>
-          <h1 className="text-4xl font-heading font-black tracking-tight">Your Impact</h1>
-          <p className="text-muted-foreground mt-2 max-w-lg">Every Eco Mode order reduces packaging waste. Estimated demo figures — small choices, real intent.</p>
-        </div>
-      </div>
+      <section className="rounded-3xl border border-eco/30 bg-eco/5 p-7 sm:p-10 mb-10 flex flex-col md:flex-row gap-8 md:items-center md:justify-between">
+        <div><span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-eco/15 text-eco text-xs font-bold mb-4"><Leaf className="w-3.5 h-3.5" /> Verified impact</span><h1 className="text-4xl sm:text-5xl font-heading font-black">Your Eco impact</h1><p className="text-muted-foreground mt-3 max-w-xl">Metrics update only after the payment provider confirms an Eco order. Moving a toggle alone never adds impact.</p></div>
+        <div className="rounded-2xl bg-card border border-border p-5 min-w-72 flex items-center gap-4"><span className="w-11 h-11 rounded-xl bg-eco/15 text-eco grid place-items-center"><Leaf className="w-5 h-5" /></span><div className="flex-1"><p className="font-heading font-bold">Eco packaging default</p><p className="text-xs text-muted-foreground">Applied to server quotes</p></div><Switch checked={eco} onCheckedChange={setEco} data-testid="eco-mode-toggle" /></div>
+      </section>
 
-      <div className="grid sm:grid-cols-3 gap-5 mb-12">
-        {stats.map((s, i) => (
-          <motion.div key={s.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-            data-testid={`eco-stat-${i}`} className="rounded-3xl border border-border bg-card p-6">
-            <span className={`w-11 h-11 rounded-2xl bg-muted grid place-items-center mb-4 ${s.color}`}><s.icon className="w-5 h-5" /></span>
-            <p className="text-4xl font-heading font-black"><Counter to={s.value} suffix={s.suffix} /></p>
-            <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
-          </motion.div>
-        ))}
-      </div>
+      <div className="grid sm:grid-cols-3 gap-5 mb-12">{stats.map((stat, index) => <motion.div key={stat.label} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.08 }} data-testid={`eco-stat-${index}`} className="rounded-2xl border border-border bg-card p-6"><span className={`w-11 h-11 rounded-xl bg-muted grid place-items-center mb-4 ${stat.color}`}><stat.icon className="w-5 h-5" /></span><p className="text-4xl font-heading font-black"><Counter to={stat.value} suffix={stat.suffix} /></p><p className="text-sm text-muted-foreground mt-1">{stat.label}</p></motion.div>)}</div>
 
-      <SectionHead title="Want to turn your impact into action?" subtitle="Optionally contribute to a cause. Prototype interaction — no real donations." />
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {CAUSES.map((c, i) => {
-          const Icon = Icons[c.icon] || Heart;
-          const done = contributed === c.id;
-          return (
-            <motion.div key={c.id} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-              className="rounded-3xl border border-border bg-card p-5 flex flex-col">
-              <span className="w-11 h-11 rounded-2xl bg-eco/10 text-eco grid place-items-center mb-4"><Icon className="w-5 h-5" /></span>
-              <h3 className="font-heading font-bold">{c.title}</h3>
-              <p className="text-sm text-muted-foreground mt-1 flex-1">{c.desc}</p>
-              <div className="mt-4">
-                <Progress value={c.raised} className="h-2" />
-                <p className="text-xs text-muted-foreground mt-1">{c.raised}% funded this month</p>
-              </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button data-testid={`contribute-${c.id}`} className={`w-full rounded-full mt-4 ${done ? "bg-eco" : ""}`} variant={done ? "default" : "outline"}>
-                    {done ? "Contributed ✓" : "Contribute"}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent data-testid={`contribution-${c.id}-dialog`} closeTestId={`contribution-${c.id}-close-button`} className="rounded-3xl max-w-sm text-center">
-                  <DialogHeader>
-                    <DialogTitle>Contribute to {c.title}</DialogTitle>
-                    <DialogDescription>Choose a demo contribution amount. No real donation will be processed.</DialogDescription>
-                  </DialogHeader>
-                  <div className="flex gap-2 justify-center my-3">
-                    {[10, 25, 50].map((amt) => (
-                      <button key={amt} data-testid={`contribution-${c.id}-${amt}-button`} onClick={() => { setContributed(c.id); toast.success(`Thanks for supporting ${c.title}! (demo)`); }}
-                        className="px-5 py-3 rounded-2xl border border-border hover:border-eco font-bold">₹{amt}</button>
-                    ))}
-                  </div>
-                  <p className="text-xs text-muted-foreground">Prototype only — no real donation is processed.</p>
-                </DialogContent>
-              </Dialog>
-            </motion.div>
-          );
-        })}
+      <SectionHead title="What Eco Mode changes" subtitle="One preference, reflected through each connected part of the product." />
+      <div className="grid md:grid-cols-3 gap-5">
+        {[{ icon: Package, title: "Packaging", text: "Restaurants receive a reduced-packaging preference with the confirmed order." }, { icon: ShoppingBag, title: "Checkout quote", text: "The server applies the current Eco packaging credit and returns the final amount." }, { icon: CheckCircle2, title: "Verified impact", text: "Packaging and score increase only after provider-confirmed payment." }].map((item, index) => <div key={item.title} data-testid={`eco-effect-${index}`} className="rounded-2xl border border-border bg-card p-6"><item.icon className="w-5 h-5 text-eco mb-4" /><h3 className="font-heading font-bold text-lg">{item.title}</h3><p className="text-sm text-muted-foreground mt-2">{item.text}</p></div>)}
       </div>
     </PageWrap>
   );

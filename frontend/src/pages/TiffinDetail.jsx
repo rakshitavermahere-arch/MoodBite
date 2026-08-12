@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { PageWrap } from "@/components/Layout";
 import { VegDot } from "@/components/Cards";
 import { useApp } from "@/context/AppContext";
-import { TIFFIN, rupee } from "@/data/mockData";
+import { rupee } from "@/data/mockData";
+import { useCatalog } from "@/context/CatalogContext";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -15,7 +16,8 @@ export default function TiffinDetail() {
   const { id } = useParams();
   const nav = useNavigate();
   const { subscribe } = useApp();
-  const t = TIFFIN.find((x) => x.id === id);
+  const { tiffin } = useCatalog();
+  const t = tiffin.find((x) => x.id === id);
   const [plan, setPlan] = useState(t?.plans[0]);
   if (!t) return <PageWrap><p data-testid="tiffin-provider-not-found-alert">Provider not found.</p></PageWrap>;
 
@@ -23,7 +25,13 @@ export default function TiffinDetail() {
   const days = plan.per === "week" ? 6 : plan.per === "month" ? 26 : plan.per.includes("3") ? 78 : 156;
   const perDay = Math.round(finalPrice / days);
 
-  const doSub = () => { subscribe(t, { ...plan, price: finalPrice }); nav("/profile"); };
+  const doSub = async () => {
+    const result = await subscribe(t, plan);
+    if (result) {
+      toast.info("Plan saved. It remains payment-required until verified checkout is available.");
+      nav("/profile");
+    }
+  };
 
   return (
     <PageWrap>
@@ -104,8 +112,8 @@ export default function TiffinDetail() {
             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Effective / day</span><span className="font-bold text-eco">{rupee(perDay)}</span></div>
             <div className="flex justify-between text-sm"><span className="text-muted-foreground">Duration</span><span className="font-bold">{plan.per}</span></div>
           </div>
-          <Button data-testid="subscribe-btn" onClick={doSub} className="w-full rounded-full h-12 mt-4 gap-2 bg-eco hover:bg-eco/90"><Check className="w-4 h-4" /> Subscribe</Button>
-          <p className="text-[10px] text-center text-muted-foreground mt-2">Demo Mode — no real charge.</p>
+          <Button data-testid="subscribe-btn" onClick={doSub} className="w-full rounded-full h-12 mt-4 gap-2 bg-eco hover:bg-eco/90"><Check className="w-4 h-4" /> Save plan request</Button>
+          <p className="text-[10px] text-center text-muted-foreground mt-2">The plan is not activated or charged until a verified payment provider confirms it.</p>
         </aside>
       </div>
     </PageWrap>
