@@ -1,0 +1,140 @@
+{
+  "project_name": "MoodBite",
+  "GENERAL_UI_UX_DESIGN_GUIDELINES": "A top 1% food platform for college students. Focus on emotion, energy, and eco-consciousness. Avoid the generic 'red/orange whole-site' fast-food look. Use an 'Oat Milk' warm base to feel premium, accented by an energetic Radish Pink and a crisp Matcha Green. Every page must feel emotionally directed. Prioritize contrast, generous spacing (2-3x standard), and high-density functional bento grids.",
+  "theme_strategy": {
+    "default": "light",
+    "description": "Nature/Food relates closely to light themes. We will use a toggle, but optimize for an Oat-Milk base (warm food-inspired neutral) in light mode."
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Cabinet Grotesk",
+      "body": "Satoshi",
+      "fallback": "sans-serif"
+    },
+    "hierarchy": {
+      "h1": "text-5xl md:text-6xl+ font-black tracking-tighter leading-none",
+      "h2": "text-3xl md:text-4xl font-extrabold tracking-tight",
+      "h3": "text-xl md:text-2xl font-bold tracking-tight",
+      "body": "text-base leading-relaxed font-medium",
+      "labels": "text-xs font-bold uppercase tracking-[0.2em]"
+    },
+    "rules": [
+      "DO NOT use Inter or Roboto for headings.",
+      "Tight letter spacing on all headings.",
+      "No generic 'Bold'—use 'Black' for hero, 'Medium' for body."
+    ]
+  },
+  "colors": {
+    "palette": {
+      "background_light": "#FDFBF7",
+      "background_dark": "#121110",
+      "primary_energetic": "#E11D48",
+      "primary_eco": "#16A34A",
+      "surface_light": "#FFFFFF",
+      "surface_dark": "#1C1B1A",
+      "text_main_light": "#1C1917",
+      "text_main_dark": "#FAFAF9"
+    },
+    "tailwind_vars_to_update": {
+      "background": "45 30% 98%",
+      "foreground": "24 10% 10%",
+      "primary": "346 80% 50%",
+      "primary-foreground": "0 0% 100%",
+      "secondary": "142 76% 36%",
+      "secondary-foreground": "0 0% 100%",
+      "border": "45 10% 90%",
+      "radius": "1rem"
+    },
+    "rules": [
+      "Avoid completely red/orange whole-site themes.",
+      "Use energetic primary (Radish Pink/Fuchsia) for main CTAs and Mood tags.",
+      "Use eco-green for Daily Tiffin and Eco Impact indicators.",
+      "No pure #000000 or #FFFFFF without purpose."
+    ]
+  },
+  "grids_and_layouts": {
+    "spacing": "Generous. Use p-6, p-8, p-12. Containers must have internal padding.",
+    "home_page": "Bento Grid (Mode A). Asymmetrical. gap-8.",
+    "app_pages": "High Density Grid (Mode B) for dashboard/orders.",
+    "alignment": "Optical alignment over geometrical. Left-align dense content.",
+    "hero_overlay": "Max overlay bg-black/40. If gradient needed, use bg-gradient-to-r from-black/70 to-transparent."
+  },
+  "surfaces_and_components": {
+    "cards": "Flat solid surfaces with subtle nested radii. No generic floaty shadows. Use 1px border border-border with subtle colored shadow on hover.",
+    "navbar": "Crystal Glassmorphism: backdrop-blur-xl bg-white/70, 1px bottom border.",
+    "buttons": "Pill-shaped (rounded-full). Hover: slight scale up and color shift.",
+    "tags": "High contrast pills. Background matches category (e.g. green for eco).",
+    "modals_toasts": "Use Sonner for toasts. Shadcn Dialog for modals. Ensure rounded-2xl.",
+    "rules": [
+      "DO NOT use transparent backgrounds for dropdowns/menus.",
+      "Use Shadcn UI components for logic, but customize styles heavily.",
+      "Avoid generic HTML input/select. Use Shadcn variants."
+    ]
+  },
+  "motion": {
+    "libraries": ["framer-motion"],
+    "rules": [
+      "Hover states on ALL interactive elements.",
+      "Spring physics for mood card interactions.",
+      "Staggered entrance animations for lists (restaurants/tiffin).",
+      "DO NOT use 'transition: all'."
+    ]
+  },
+  "icons": {
+    "library": "lucide-react",
+    "rules": "Default choice. Clean, stroke-based. Size appropriately."
+  },
+  "media_and_images": {
+    "rules": "No placeholder text/URLs. Use provided URLs for all imagery.",
+    "image_urls": {
+      "hero_group_orders": {
+        "url": "https://images.pexels.com/photos/6805151/pexels-photo-6805151.jpeg",
+        "description": "Friends sharing pizza indoors. Use for Group Orders feature or main Hero."
+      },
+      "tiffin_eco": {
+        "url": "https://images.unsplash.com/photo-1543352632-5a4b24e4d2a6?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxoZWFsdGh5JTIwbHVuY2glMjBib3glMjB0aWZmaW58ZW58MHx8fHwxNzg1NDAwMzEwfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Healthy meal prep boxes. Use for Daily Tiffin section."
+      },
+      "mood_studying": {
+        "url": "https://images.pexels.com/photos/7128776/pexels-photo-7128776.jpeg",
+        "description": "Two young adults studying with coffee. Use for 'Studying' Mood Card."
+      },
+      "mood_rainy": {
+        "url": "https://images.pexels.com/photos/7516547/pexels-photo-7516547.jpeg",
+        "description": "Concentrated student with hot drink. Use for 'Rainy Day' / 'Comfort' Mood Card."
+      },
+      "food_generic": {
+        "url": "https://images.unsplash.com/photo-1606066889831-35faf6fa6ff6",
+        "description": "Slice of pizza. Use for single order / general food display."
+      }
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure APCA standards or WCAG AA minimum. Explicit hover text colors.",
+    "testing": "All interactive/key elements MUST have data-testid attributes (kebab-case, role-based).",
+    "motion": "Respect prefers-reduced-motion."
+  },
+  "instructions_to_main_agent": [
+    "1. Setup Tailwind config with new variables (colors, fonts).",
+    "2. Setup CSS variables in index.css matching the 'colors' section.",
+    "3. Build Layout: Navigation (Glassmorphism), Footer.",
+    "4. Build Home Page: Hero with 'What does today feel like?', AI input box, Bento Grid for Mood Cards.",
+    "5. Build 'Explore' & 'Tiffin' sections with Grid density mode B.",
+    "6. Build AI Concierge Chat Interface.",
+    "7. Implement Group Orders (shared cart UI).",
+    "8. Integrate Framer Motion for list staggering and hover states.",
+    "9. Add Sonner Toasts for interactions (e.g. 'Added to group cart').",
+    "10. Ensure fully responsive, mobile-first design (bottom nav on mobile)."
+  ],
+  "universal_guidelines_for_main_agent": [
+    "You tend to converge toward generic outputs. Break the mold. Make creative, distinctive frontends.",
+    "Don't make generic centered layouts or simplistic gradients.",
+    "Use layered z-index hierarchy and glassmorphism.",
+    "DO NOT apply 'transition: all'.",
+    "DO NOT center align the app container (.App { text-align: center; }).",
+    "Use modern pill-shaped or sharp buttons with interaction animations.",
+    "NEVER use AI assistant emoji characters.",
+    "Apply 2-3x more spacing than feels comfortable.",
+    "Use .js/.jsx extensions for all React component files, NOT .tsx."
+  ]
+}
