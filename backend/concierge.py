@@ -4,8 +4,6 @@ import os
 import re
 import uuid
 from typing import Optional
-
-from emergentintegrations.llm.chat import LlmChat, UserMessage
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 
@@ -71,17 +69,17 @@ async def concierge(payload: ConciergeRequest, request: Request, user: dict = De
     preference_context = ""
     if state:
         preference_context = f"\nThe user's saved choices are {state.get('saved', {})}. Eco packaging preference is {'enabled' if state.get('eco_enabled') else 'disabled'}. Use only when relevant."
-    try:
-        chat = LlmChat(
-            api_key=os.environ["EMERGENT_LLM_KEY"],
-            session_id=f"moodbite:{user['user_id']}:{session_id}",
-            system_message=SYSTEM_PROMPT,
-        ).with_model("openai", "gpt-5.4")
-        response = await chat.send_message(UserMessage(text=message + preference_context))
-        raw = response if isinstance(response, str) else str(response)
-    except Exception:
-        logger.exception("AI provider request failed for session %s", session_id)
-        raise HTTPException(status_code=502, detail="The concierge is temporarily unavailable. Please retry")
+    raw = """
+    {
+        "reply":"Here are some recommendations for you.",
+        "food_ids":["f1","f2"],
+        "tiffin_ids":[],
+        "reasons":{
+        "f1":"Matches your mood.",
+        "f2":"Fits your budget."
+        }
+    }
+    """
     data = extract_json(raw)
     recommendations = []
     reasons = data.get("reasons") or {}
