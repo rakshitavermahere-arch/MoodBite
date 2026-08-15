@@ -35,10 +35,13 @@ app = FastAPI(title="MoodBite API", version="2.0.0", lifespan=lifespan)
 origins = [value.strip() for value in os.environ["CORS_ORIGINS"].split(",") if value.strip()]
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
-    allow_origins=origins,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "X-CSRF-Token", "Stripe-Signature"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -103,3 +106,6 @@ app.include_router(commerce_router)
 app.include_router(groups_router)
 app.include_router(reviews_router)
 app.include_router(payments_router)
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("server:app", host="127.0.0.1", port=8000, reload=True)

@@ -14,6 +14,8 @@ const readCookie = (name) => {
   const row = document.cookie.split("; ").find((item) => item.startsWith(`${name}=`));
   return row ? decodeURIComponent(row.split("=").slice(1).join("=")) : null;
 };
+console.log("ALL COOKIES:", document.cookie);
+console.log("CSRF COOKIE:", readCookie("csrf_token"));
 
 api.interceptors.request.use((config) => {
   const method = (config.method || "get").toLowerCase();

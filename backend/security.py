@@ -51,12 +51,15 @@ def validate_password(password: str) -> None:
     if not any(ch.isdigit() for ch in password):
         raise HTTPException(status_code=400, detail="Password must include a number")
 
-
 def require_csrf(request: Request) -> None:
     cookie = request.cookies.get("csrf_token")
     header = request.headers.get("x-csrf-token")
+
     if not cookie or not header or not secrets.compare_digest(cookie, header):
-        raise HTTPException(status_code=403, detail="Security token is missing or invalid")
+        raise HTTPException(
+            status_code=403,
+            detail="Security token is missing or invalid"
+        )
 
 
 async def enforce_rate_limit(key: str, limit: int, window_seconds: int = 60) -> None:
