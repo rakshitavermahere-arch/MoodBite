@@ -117,11 +117,6 @@ export const FRIENDS = [
   { id: "u4", name: "Rohan", avatar: "R", color: "bg-amber-500" },
 ];
 
-export const SAMPLE_ORDERS = [
-  { id: "MB2481", restaurant: "Dilli Tadka", items: ["Butter Chicken + Rice", "Gulab Jamun (2 pcs)"], total: 288, status: "Delivered", date: "12 Jun 2026" },
-  { id: "MB2455", restaurant: "Wok & Roll", items: ["Veg Hakka Noodles", "Veg Momos (8 pcs)"], total: 228, status: "Delivered", date: "8 Jun 2026" },
-  { id: "MB2402", restaurant: "Campus Comfort Co.", items: ["Creamy Paneer Pasta", "Cold Coffee"], total: 279, status: "Delivered", date: "2 Jun 2026" },
-];
 
 export const CAUSES = [
   { id: "c1", title: "Food Security", desc: "Fund meals for families in need.", icon: "Utensils", raised: 68 },

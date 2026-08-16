@@ -16,7 +16,7 @@ const statusStyle = (status) => {
 
 export default function Orders() {
   const navigate = useNavigate();
-  const { orders } = useApp();
+  const { orders} = useApp();
 
   return (
     <PageWrap>

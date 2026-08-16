@@ -49,10 +49,6 @@ export default function Signup() {
 
   return (
     <AuthShell eyebrow="Join MoodBite" title="Bring every food plan into one place." description="Save favourites, order with friends, and build a better everyday-food routine.">
-      <Button type="button" variant="outline" data-testid="signup-google-button" onClick={() => startGoogle(next)} className="w-full h-12 rounded-full bg-card border-border gap-3">
-        <span className="w-6 h-6 rounded-full bg-white border grid place-items-center font-bold text-sm text-[#4285F4]">G</span> Continue with Google
-      </Button>
-      <div className="flex items-center gap-4 my-6"><span className="h-px bg-border flex-1" /><span className="text-xs uppercase font-bold text-muted-foreground">or email</span><span className="h-px bg-border flex-1" /></div>
       <form onSubmit={submit} className="space-y-4" noValidate>
         {error && <div role="alert" data-testid="signup-error-alert" className="rounded-xl border border-destructive/25 bg-destructive/5 p-3 text-sm text-destructive">{error}</div>}
         <div className="space-y-2"><Label htmlFor="signup-name">Name</Label><Input id="signup-name" data-testid="signup-name-input" value={form.name} onChange={update("name")} autoComplete="name" placeholder="Your full name" className="h-12 rounded-xl bg-card" /></div>
@@ -70,3 +66,4 @@ export default function Signup() {
     </AuthShell>
   );
 }
+ 

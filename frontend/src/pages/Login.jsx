@@ -45,10 +45,6 @@ export default function Login() {
 
   return (
     <AuthShell eyebrow="Welcome back" title="Your next good meal starts here." description="Sign in to continue your cart, group order, Tiffin plan, and Eco streak.">
-      <Button type="button" variant="outline" data-testid="login-google-button" onClick={() => startGoogle(next)} className="w-full h-12 rounded-full bg-card border-border gap-3">
-        <span className="w-6 h-6 rounded-full bg-white border grid place-items-center font-bold text-sm text-[#4285F4]">G</span> Continue with Google
-      </Button>
-      <div className="flex items-center gap-4 my-6"><span className="h-px bg-border flex-1" /><span className="text-xs uppercase font-bold text-muted-foreground">or email</span><span className="h-px bg-border flex-1" /></div>
       <form onSubmit={submit} className="space-y-5" noValidate>
         {error && <div role="alert" data-testid="login-error-alert" className="rounded-xl border border-destructive/25 bg-destructive/5 p-3 text-sm text-destructive">{error}</div>}
         <div className="space-y-2">

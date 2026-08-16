@@ -1,6 +1,6 @@
 {
   "project_name": "MoodBite",
-  "GENERAL_UI_UX_DESIGN_GUIDELINES": "A top 1% food platform for college students. Focus on emotion, energy, and eco-consciousness. Avoid the generic 'red/orange whole-site' fast-food look. Use an 'Oat Milk' warm base to feel premium, accented by an energetic Radish Pink and a crisp Matcha Green. Every page must feel emotionally directed. Prioritize contrast, generous spacing (2-3x standard), and high-density functional bento grids. All interactive and key informational elements MUST include a data-testid attribute to facilitate robust automated testing.",
+  "GENERAL_UI_UX_DESIGN_GUIDELINES": "A top 1% food platform for college students. Focus on emotion, energy, and eco-consciousness. Avoid the generic 'red/orange whole-site' fast-food look. Use an 'Oat Milk' warm base to feel premium, accented by an energetic Radish Pink and a crisp Matcha Green. Every page must feel emotionally directed. Prioritize contrast, generous spacing (2-3x standard), and high-density functional bento grids.",
   "theme_strategy": {
     "default": "light",
     "description": "Nature/Food relates closely to light themes. We will use an Oat-Milk base (warm food-inspired neutral) in light mode, preserving the established oat-milk, radish-pink, matcha-green identity."
@@ -108,56 +108,5 @@
         "description": "Healthy meal prep boxes. Use for Daily Tiffin section."
       }
     }
-  },
-  "route_level_hierarchy": {
-    "/": "Home - Usable food app as the first screen (NO marketing landing page). Shows AI Concierge, Mood cards, Catalog.",
-    "/auth/*": "Premium Auth flows (Login, Signup, Forgot, Reset) with Emergent Google OAuth. Split screen layout.",
-    "/explore": "Full catalog.",
-    "/restaurant/:id": "Restaurant detail with real images, reviews, ratings.",
-    "/concierge": "Real AI Food Concierge grounded to catalog.",
-    "/group": "Real-time Group Orders dashboard: invite code, scannable QR, real-time participant cart updates.",
-    "/cart": "MongoDB-backed cart.",
-    "/checkout": "Stripe hosted checkout integration.",
-    "/checkout/success": "Payment Result Success - Server verified status.",
-    "/checkout/cancel": "Payment Result Cancel/Failure state.",
-    "/track/:id": "Order tracking.",
-    "/tiffin": "Tiffin hub.",
-    "/tiffin/compare": "Tiffin comparison and subscription states.",
-    "/tiffin/:id": "Tiffin detail.",
-    "/eco": "Eco Mode metrics.",
-    "/orders": "Order history.",
-    "/orders/:id/review": "Review composer for past orders.",
-    "/profile": "Authenticated profile state."
-  },
-  "implementation_blueprint": {
-    "auth": "Implement JWT email/password + Emergent-managed Google Sign-In. Wrap app in AuthProvider. Use robust error handling.",
-    "payment": "Implement Stripe First. Use Stripe Checkout sessions. Handle success/cancel redirects gracefully with custom Radish Pink/Matcha Green UI.",
-    "group_orders": "Use WebSockets or polling for real-time state. Display active users and their contributions dynamically. Implement scannable QR flow.",
-    "reviews": "Add a Review Composer modal or page. Allow 1-5 star rating and text. Persist to MongoDB. Show aggregated ratings on Restaurant pages.",
-    "image_fallback": "Create a reusable <FallbackImage /> component that uses onError to switch to a styled fallback if the actual image fails to load.",
-    "ui_ux": "Perform a complete premium UI/UX pass. Ensure responsive design (desktop + mobile navigation). Enforce accessibility and E2E test IDs."
-  },
-  "instructions_to_main_agent": [
-    "1. Setup complete route hierarchy in App.js including new Auth, Payment Result, and Review routes.",
-    "2. Implement Premium Auth components (/auth/login, /auth/signup, etc) using split-screen layout.",
-    "3. Implement `<FallbackImage />` component and replace all `<img>` tags displaying food with it.",
-    "4. Build Stripe Payment Success/Cancel screens with appropriate branding (Matcha Green for success).",
-    "5. Enhance `/group` with Real-time participant status UI and functional QR code flow.",
-    "6. Build the Review Composer and integrate it into Order History.",
-    "7. Ensure the Profile page correctly reflects Authenticated states.",
-    "8. Perform a responsive pass: ensure the bottom nav is active on mobile, side/top nav on desktop.",
-    "9. Add data-testid attributes to ALL buttons, inputs, links, and forms for E2E testing.",
-    "10. Connect frontend UI to backend APIs correctly (Auth, Stripe, MongoDB, Real-time Group Orders). Do not use fake data for major flows."
-  ],
-  "universal_guidelines_for_main_agent": [
-    "You tend to converge toward generic outputs. Break the mold. Make creative, distinctive frontends.",
-    "Don't make generic centered layouts or simplistic gradients.",
-    "Use layered z-index hierarchy and glassmorphism.",
-    "DO NOT apply 'transition: all'.",
-    "DO NOT center align the app container (.App { text-align: center; }).",
-    "Use modern pill-shaped or sharp buttons with interaction animations.",
-    "NEVER use AI assistant emoji characters.",
-    "Apply 2-3x more spacing than feels comfortable.",
-    "Use .js/.jsx extensions for all React component files, NOT .tsx."
-  ]
+  }
 }

@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { api, apiError } from "@/lib/api";
+import { useApp } from "@/context/AppContext";
 
 
 export default function PaymentSuccess() {
@@ -12,9 +13,34 @@ export default function PaymentSuccess() {
   const [status, setStatus] = useState("verifying");
   const [orderId, setOrderId] = useState(null);
   const [error, setError] = useState("");
+  const { cart, subtotal, addDemoOrder } = useApp();
 
   useEffect(() => {
-    if (!sessionId) { setError("Payment session is missing."); setStatus("error"); return; }
+   if (!sessionId) {
+      const demoOrder = {
+        order_id: `MB-DEMO-${Date.now()}`,
+        status: "confirmed",
+        restaurant: cart[0]?.restaurant || "MoodBite Kitchen",
+        items: cart.length
+          ? cart.map((item) => ({
+              product_id: item.id,
+              name: item.name,
+              quantity: item.qty,
+              price: item.price,
+              line_total: item.price * item.qty,
+            }))
+          : [
+              { product_id: "demo-1", name: "Mood Bowl", quantity: 1, price: 199 },
+              { product_id: "demo-2", name: "Masala Chai", quantity: 2, price: 49 },
+            ],
+        amount: subtotal || 297,
+        created_at: new Date().toISOString(),
+      };
+      addDemoOrder(demoOrder);
+      setStatus("paid");
+      setOrderId(demoOrder.order_id);
+      return;
+   }
     let attempts = 0;
     let timer;
     const verify = async () => {

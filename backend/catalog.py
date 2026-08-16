@@ -95,7 +95,6 @@ def catalog_text():
         lines.append(f"{provider['id']}: {provider['name']} | {provider['meals']} | Rs.{provider['monthly']}/month | {provider['rating']}star | {diet} | {provider['area']} | flexibility {provider['flexibility']}")
     return "\n".join(lines)
 
-
 FOOD_BY_ID = {item["id"]: item for item in FOODS}
 TIFFIN_BY_ID = {item["id"]: item for item in TIFFIN}
 RESTAURANT_BY_ID = {item["id"]: item for item in RESTAURANTS}

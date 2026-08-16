@@ -1,6 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { SAMPLE_ORDERS } from "@/data/mockData";
 import { useAuth } from "@/context/AuthContext";
 import { api, apiError } from "@/lib/api";
 
@@ -9,6 +8,15 @@ const AppContext = createContext(null);
 
 const readLocal = (key, fallback) => {
   try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; }
+};
+
+// Demo-only: keeps demo orders/eco stats in localStorage so they survive
+// a page refresh, without ever touching the real backend.
+const DEMO_KEY = "mb_demo_state";
+const readDemoState = () =>
+  readLocal(DEMO_KEY, { orders: [], ecoStats: { packaging: 0, score: 0, ecoOrders: 0 } });
+const writeDemoState = (state) => {
+  try { localStorage.setItem(DEMO_KEY, JSON.stringify(state)); } catch { /* ignore */ }
 };
 
 export function AppProvider({ children }) {
@@ -23,12 +31,18 @@ export function AppProvider({ children }) {
   const [loading, setLoading] = useState(false);
 
   const applyState = useCallback((data) => {
+    const demo = readDemoState();
     setCart((data.cart || []).map((item) => ({ ...item, qty: item.quantity })));
-    setOrders(data.orders || []);
+    setOrders([...demo.orders, ...(data.orders || [])]);
     setSubscriptions(data.subscriptions || []);
     setSaved(data.saved || { restaurants: [], tiffin: [] });
     setEcoState(data.eco ?? true);
-    setEcoStats(data.eco_stats || { packaging: 0, score: 0, ecoOrders: 0 });
+    const baseEcoStats = data.eco_stats || { packaging: 0, score: 0, ecoOrders: 0 };
+    setEcoStats({
+      packaging: baseEcoStats.packaging + demo.ecoStats.packaging,
+      score: baseEcoStats.score + demo.ecoStats.score,
+      ecoOrders: baseEcoStats.ecoOrders + demo.ecoStats.ecoOrders,
+    });
   }, []);
 
   useEffect(() => {
@@ -46,7 +60,7 @@ export function AppProvider({ children }) {
         eco: readLocal("mb_eco", true),
         eco_stats: readLocal("mb_eco_stats", { packaging: 0, score: 0, ecoOrders: 0 }),
         subscriptions: readLocal("mb_subs", []),
-        orders: [...readLocal("mb_orders", []), ...SAMPLE_ORDERS],
+        orders: [...readLocal("mb_orders", [])],
       };
       try {
         const [{ data: state }, { data: currentGroup }] = await Promise.all([
@@ -94,6 +108,10 @@ export function AppProvider({ children }) {
     }
   };
 
+  // Demo-only: empties the cart in memory without calling the backend,
+  // so a demo checkout visibly clears the cart like a real order would.
+  const clearCartLocal = () => setCart([]);
+ 
   const removeItem = async (id) => {
     try {
       const { data } = await api.delete(`/cart/items/${id}`);
@@ -121,6 +139,39 @@ export function AppProvider({ children }) {
     } catch (error) {
       toast.error(apiError(error, "Could not update saved items."));
     }
+  };
+
+  const refreshOrders = async () => {
+    try {
+      const { data } = await api.get("/app-state");
+      applyState(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // Demo-only: injects a locally-made order into the orders list so
+  // OrderTracking has something to find, without calling any backend.
+  // Also nudges the eco stats forward so the Eco Impact / Profile pages
+  // show visible progress during a demo, matching what Eco Mode promises.
+  const addDemoOrder = (order) => {
+    setOrders((prev) => [order, ...prev]);
+    const demo = readDemoState();
+    const updatedDemo = { orders: [order, ...demo.orders], ecoStats: demo.ecoStats };
+    if (eco) {
+      setEcoStats((prev) => ({
+        packaging: prev.packaging + 1,
+        score: prev.score + 10,
+        ecoOrders: prev.ecoOrders + 1,
+      }));
+      updatedDemo.ecoStats = {
+        packaging: demo.ecoStats.packaging + 1,
+        score: demo.ecoStats.score + 10,
+        ecoOrders: demo.ecoStats.ecoOrders + 1,
+      };
+    }
+    writeDemoState(updatedDemo);
+    return order;
   };
 
   const setEco = async (enabled) => {
@@ -173,12 +224,22 @@ export function AppProvider({ children }) {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   const value = {
-    cart, cartCount, subtotal, addToCart, updateQty, removeItem, clearCart,
-    group, setGroup, startGroup,
-    eco, setEco, donation: 0, setDonation: () => toast.info("Contributions will open when a verified payment provider is available."),
-    orders, subscriptions, subscribe, cancelSubscription,
-    saved, toggleSave,
-    ecoStats, loading,
+  cart, cartCount, subtotal, addToCart, updateQty, removeItem, clearCart,
+  group, setGroup, startGroup,
+  eco, setEco,
+  donation: 0,
+  setDonation: () => toast.info("Contributions will open when a verified payment provider is available."),
+  orders,
+  refreshOrders,   // ADD THIS LINE
+  addDemoOrder,
+  clearCartLocal,
+  subscriptions,
+  subscribe,
+  cancelSubscription,
+  saved,
+  toggleSave,
+  ecoStats,
+  loading,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
@@ -189,3 +250,4 @@ export function useApp() {
   if (!value) throw new Error("useApp must be used within AppProvider");
   return value;
 }
+ 

@@ -52,7 +52,6 @@ export function RestaurantCard({ r, i = 0, testIdScope = "catalog" }) {
         <div className="flex items-center gap-3 mt-3 text-xs text-muted-foreground">
           <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{r.deliveryTime}</span>
           <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{r.distance}</span>
-          <span className="ml-auto font-semibold text-foreground">{r.priceRange}</span>
         </div>
       </div>
     </motion.div>
@@ -144,3 +143,4 @@ export function SectionHead({ title, subtitle, action }) {
     </div>
   );
 }
+ 

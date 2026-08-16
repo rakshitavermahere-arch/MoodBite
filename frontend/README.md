@@ -1,70 +1,39 @@
-# Getting Started with Create React App
+# MoodBite
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Food for your mood. Meals for your life.**
 
-## Available Scripts
+Every food delivery app promises to feed you. Precious few bother asking *why* you're hungry, *who* you're hungry with, or *what happens to the packaging* after the last bite. MoodBite was built on the mildly rebellious idea that a college student's relationship with food deserves better than a rotating carousel of "50% off, use code HUNGRY50."
 
-In the project directory, you can run:
+So instead of cloning the usual formula and repainting it in a new colour, MoodBite starts from the actual, unglamorous texture of student life — tight budgets, group chats that never quite settle the bill, and a nagging conscience about the mountain of plastic containers piling up in the corner of the room.
 
-### `npm start`
+## What makes MoodBite different
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 🧠 An AI Concierge with actual taste (and restraint)
+Forget wading through forty filters to find "something spicy, cheap, and fast." Just say it: *"something spicy under ₹150 for two, we're deep in a finals-week spiral."* MoodBite's Concierge listens, consults the real catalog, respects your budget like a disciplined accountant, and hands back a short list of genuinely orderable dishes — each with a specific, sensible reason, not a vague algorithmic shrug.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 👥 Group ordering, minus the group-chat archaeology
+You know the ritual: someone fronts the bill, then spends the next three days performing polite forensic accounting in WhatsApp to recover ₹85 from a friend who insists they "already sent it." MoodBite ends the ritual. One host, one shared cart, everyone adds their own items, and the app quietly tracks who's paid and who's still "getting to it" — so settlement becomes a feature, not a favour.
 
-### `npm test`
+### 🍱 Daily Tiffin, treated like it deserves top billing
+Here's the part most food-tech products conveniently forget exists: **daily home-style meal subscriptions.** Restaurant-hopping is fun on a Friday; it is not a sustainable Tuesday-through-Sunday lifestyle. Reliable Tiffin services are a genuine lifeline for hostel life — and yet they're strikingly absent from most mainstream delivery platforms, tucked away as an afterthought if they exist at all. MoodBite makes Tiffin a headline feature: browse real providers, compare price, delivery windows, and flexibility side by side, and subscribe to something that will still be dependable a month from now. This is one of the rarer, more genuinely useful things MoodBite does that most competitors simply don't.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🌱 Eco impact that earns its leaf icon
+A great many apps will show you a cheerful green badge and call it a day. MoodBite is stubbornly literal about this: your Eco Score, packaging avoided, and verified Eco orders move only when a real, provider-confirmed payment has actually gone through — never merely because a toggle got flipped. If a number goes up, something real happened to deserve it.
 
-### `npm run build`
+### 🎨 A face that isn't borrowed from a template
+MoodBite doesn't look like it escaped from the same design-kit as everything else in this category. It wears a warm, distinctive "Oat Milk" palette accented by Radish Pink and Matcha Green, deliberate typography, and motion that feels considered rather than decorative — because an app you open multiple times a day has earned the right to be looked at without wincing.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Who it's for
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Students in hostels, PGs, or shared flats**, negotiating a food budget against a merciless class schedule.
+- **The perennial group-order organizer**, who deserves a system that remembers debts so they don't have to.
+- **Anyone craving dependable, home-style meals** without becoming a part-time hostel-room chef.
+- **The quietly eco-conscious**, who'd like their choices to mean something more substantial than a badge.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Where the project stands
 
-### `npm run eject`
+MoodBite is under active development, and it would rather be honest than impressive. Core flows — AI recommendations, group ordering, Tiffin discovery, cart and checkout, order tracking, and eco tracking — are built and working end to end. Real payment provider integration (Stripe/Razorpay) is deliberately left unconfigured for now, and the app says so plainly rather than pretending otherwise — it will never mark an order "paid" without genuine provider verification.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Built for people who are tired of food apps that all feel like the same app wearing a different logo.*

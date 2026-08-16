@@ -194,6 +194,53 @@ async def create_stripe_checkout(payload: StripeCheckoutRequest, request: Reques
     return {"checkout_url": session.url, "session_id": session.id, "order_id": order_id}
 
 
+@router.post("/orders/demo")
+async def create_demo_order(user: dict = Depends(current_user)):
+    order_id = f"MB-{uuid.uuid4().hex[:8].upper()}"
+
+    state = await db.app_states.find_one(
+        {"user_id": user["user_id"]},
+        {"_id": 0}
+    )
+
+    print("STATE =", state)
+    cart = state.get("cart", [])
+
+    items = []
+    amount = 0
+
+    for cart_item in cart:
+        food = FOOD_BY_ID.get(cart_item["product_id"])
+
+        if food:
+            qty = cart_item["quantity"]
+
+            items.append({
+                "product_id": food["id"],
+                "name": food["name"],
+                "quantity": qty,
+                "price": food["price"],
+                "line_total": food["price"] * qty,
+            })
+
+            amount += food["price"] * qty
+
+    doc = {
+        "order_id": order_id,
+        "user_id": user["user_id"],
+        "status": "confirmed",
+        "payment_status": "paid",
+        "restaurant": "MoodBite Order",
+        "items": items,
+        "amount": amount,
+        "created_at": utc_now(),
+        "updated_at": utc_now(),
+    }
+    await db.orders.insert_one(doc)
+
+    return {"order_id": order_id}
+
+
 @router.get("/payments/status/{session_id}")
 async def payment_status(session_id: str):
     order = await db.orders.find_one({"provider_session_id": session_id}, {"_id": 0})

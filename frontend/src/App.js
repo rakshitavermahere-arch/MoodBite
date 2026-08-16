@@ -27,6 +27,7 @@ import Signup from "@/pages/Signup";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import AuthCallback from "@/pages/AuthCallback";
+import ProcessingPayment from "./pages/ProcessingPayment";
 
 
 function AppRoutes() {
@@ -61,6 +62,8 @@ function AppRoutes() {
           <Route path="/track/:id" element={<OrderTracking />} />
           <Route path="/eco" element={<EcoImpact />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/processing-payment" element={<ProcessingPayment />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />   
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
