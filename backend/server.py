@@ -35,15 +35,11 @@ app = FastAPI(title="MoodBite API", version="2.0.0", lifespan=lifespan)
 origins = [value.strip() for value in os.environ["CORS_ORIGINS"].split(",") if value.strip()]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 @app.middleware("http")
 async def security_headers(request: Request, call_next):
