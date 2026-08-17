@@ -219,6 +219,9 @@ async def google_session(payload: GoogleSessionRequest, response: Response):
     await create_session(user["user_id"], response, "google", data["session_token"])
     return public_user(user)
 
+@router.get("/csrf-token")
+async def csrf_token(request: Request):
+    return {"csrf_token": request.cookies.get("csrf_token")}
 
 @router.get("/me", response_model=UserPublic)
 async def me(user: dict = Depends(current_user)):
